@@ -1,6 +1,6 @@
 {
     "name": "linkthings",
-    "version": "1.0",
+    "version": "1.1.0",
     "description": "a script to let you control + click on[[wiki links]] and {{template links}} in the CodeMirror editor",
     "main": "linkThings.js",
     "devDependencies": {
