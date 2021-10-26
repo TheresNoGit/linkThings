@@ -36,13 +36,19 @@ function setup() {
                     // Set up event listener for a ctrl + click
                     $('.ve-ui-surface').on('click', function (event) {
                         if (event.ctrlKey) {
-                            if (parseLinkVE(event.target.innerText)) {
-                                return true;
-                            } else {
-                                // Assume the user ctrl + clicked on something they thought would work, and give error
-                                console.error(`linkThings v${version}: Clicked element was not detected as a page or template link`);
-                                return false;
-                            }
+                            $(".cm-mw-pagename").each((i, e) => {
+                                // Click "raycasting" in order to detect the click even if the VE
+                                // elemnent is overhead.
+                                if (isClickAboveElement(e, event)) {
+                                    if (parseLink(e)) {
+                                        return true;
+                                    } else {
+                                        // Assume the user ctrl + clicked on something they thought would work, and give error
+                                        console.error(`linkThings v${version}: Clicked element was not detected as a page or template link`);
+                                        return false;
+                                    }
+                                }
+                            });
                         }
                     });
                     console.info(`linkThings v${version}: Initialized OK, using ${siteUrl} in VE mode`);
@@ -59,7 +65,7 @@ function setup() {
         mw.hook('ext.CodeMirror.switch').add(function () {
             if ($(".CodeMirror").length) {
                 // Set up event listener for a ctrl + click
-                $('.CodeMirror').on('click', function (event) {
+                $('.cm-mw-pagename').on('click', function (event) {
                     if (event.ctrlKey) {
                         if (parseLink(event.target)) {
                             return true;
@@ -108,44 +114,25 @@ function parseLink(element) {
 }
 
 /**
- * Parse a ctrl clicked *anything* (VE)
+ * Check if a click was above an element.
  * 
- * @param {string} innerText Clicked HTML element
- * @returns bool
+ * @param {HTMLElement} element The element to check for
+ * @param {MouseEvent} event The event to check against
+ * @returns {boolean} Whether or not the click was above the element or not
  */
- function parseLinkVE(innerText) {
-    const linkRegexVE = new RegExp(/\W{2}(?<title>.*?)\W{2}/, 'i'); // eslint-disable-line
+function isClickAboveElement(element, event) {
+    const $e = $(element), $w = $(window);
+    const { clientY: cTop, clientX: cLeft } = event;
+    const { top: eTop, left: eLeft } = $e.offset();
+    const eHeight = $e.height(), eWidth = $e.width();
+    const scrollTop = $w.scrollTop(), scrollLeft = $w.scrollLeft();
 
-    // Use .includes first, as its quicker than regex
-    if (innerText.includes("{{")) {
-        // This is a template link of some sort
-        if (innerText.includes(":")) {
-            // Template is not in the template namespace
-            let match = linkRegexVE.exec(innerText);
-            let url = `${siteUrl}${match.groups.title}`;
-            console.debug(`linkThings v${version}: [!T] opening ${url}`);
-            openInTab(url);
-            return true;
-        } else {
-            // Template is in the template namespace
-            let match = linkRegexVE.exec(innerText);
-            console.log(match);
-            let url = `${siteUrl}Template:${match.groups.title}`;
-            console.debug(`linkThings v${version}: [T] opening ${url}`);
-            openInTab(url);
-            return true;
-        }
-    } else if (innerText.includes("[[")) {
-        // This is a page link
-        let match = linkRegexVE.exec(innerText);
-        let url = `${siteUrl}${match.groups.title}`;
-        console.debug(`linkThings v${version}: [P] opening ${url}`);
-        openInTab(url);
-        return true;
-    } else {
-        // Neither a template link nor a page link
-        return false;
-    }
+    return (
+        // Within bounds, top
+        eTop - scrollTop <= cTop && eTop - scrollTop + eHeight >= cTop &&
+        // Within bounds, left
+        eLeft - scrollLeft <= cLeft && eLeft - scrollLeft + eWidth >= cLeft
+    );
 }
 
 /**
