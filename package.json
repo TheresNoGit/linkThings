@@ -4,26 +4,26 @@
     "description": "a script to let you control + click on[[wiki links]] and {{template links}} in the CodeMirror and visual source editor",
     "main": "linkThings.js",
     "devDependencies": {
-      "eslint": "^7.32.0",
-      "eslint-config-standard": "^16.0.3",
-      "eslint-config-wikimedia": "^0.20.0",
-      "eslint-plugin-es": "^4.1.0",
-      "eslint-plugin-import": "^2.23.4",
-      "eslint-plugin-node": "^11.1.0",
-      "eslint-plugin-promise": "^5.1.0",
-      "types-mediawiki": "^1.2.0"
+        "eslint": "^7.32.0",
+        "eslint-config-standard": "^16.0.3",
+        "eslint-config-wikimedia": "^0.20.0",
+        "eslint-plugin-es": "^4.1.0",
+        "eslint-plugin-import": "^2.23.4",
+        "eslint-plugin-node": "^11.1.0",
+        "eslint-plugin-promise": "^5.1.0",
+        "types-mediawiki": "^1.2.0"
     },
     "scripts": {
-      "test": "eslint linkThings.js"
+        "test": "eslint linkThings.js"
     },
     "repository": {
-      "type": "git",
-      "url": "git+https://github.com/TheresNoGit/linkThings.git"
+        "type": "git",
+        "url": "git+https://github.com/TheresNoGit/linkThings.git"
     },
     "author": "Sam",
     "license": "MIT",
     "bugs": {
-      "url": "https://github.com/TheresNoGit/linkThings/issues"
+        "url": "https://github.com/TheresNoGit/linkThings/issues"
     },
     "homepage": "https://github.com/TheresNoGit/linkThings"
-  }
+}
