@@ -21,7 +21,7 @@ mw.loader.using(["mediawiki.Title"], setup);
  * Gets the URL of the page, irrespective of the wiki this is on.
  * @param {string} page The page to get the URL of.
  */
-function getUrl(page) {
+function getUrl(page = "") {
     return new URL(
         mw.config.get("wgArticlePath").replace(/\$1/g, page),
         window.location.href
@@ -61,7 +61,7 @@ function setup() {
                             });
                         }
                     });
-                    console.info(`linkThings v${version}: Initialized OK, using ${getUrl("")} in VE mode`);
+                    console.info(`linkThings v${version}: Initialized OK, using ${getUrl()} in VE mode`);
                 } else {
                     console.debug(`linkThings v${version}: VE is not in source mode`);
                 }
@@ -86,7 +86,7 @@ function setup() {
                         }
                     }
                 });
-                console.info(`linkThings v${version}: Initialized OK, using ${getUrl("")} in CodeMirror mode`);
+                console.info(`linkThings v${version}: Initialized OK, using ${getUrl()} in CodeMirror mode`);
             } else {
                 console.error(`linkThings v${version}: Could not initialize script - CodeMirror element not found?`);
                 return false;
