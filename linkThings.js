@@ -3,7 +3,7 @@
 * [[wiki links]] and {{template links}} in the CodeMirror
 * editor
 *
-* @version 1.0
+* @version 1.1
 * @license https://opensource.org/licenses/MIT MIT
 * @author Sam (User:TheresNoTime)
 * @link https://github.com/TheresNoGit/linkThings
@@ -12,7 +12,7 @@
 /*jshint esversion: 6 */
 
 // Configure
-let version = "1.0";
+let version = "1.1";
 let siteUrl = "https://en.wikipedia.org/wiki/";
 
 // Init
