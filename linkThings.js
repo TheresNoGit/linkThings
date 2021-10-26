@@ -13,10 +13,20 @@
 
 // Configure
 let version = "1.2.1";
-let siteUrl = "https://en.wikipedia.org/wiki/";
 
 // Init
 mw.loader.using(["mediawiki.Title"], setup);
+
+/**
+ * Gets the URL of the page, irrespective of the wiki this is on.
+ * @param {string} page The page to get the URL of.
+ */
+function getUrl(page) {
+    return new URL(
+        mw.config.get("wgArticlePath").replace(/\$1/g, page),
+        window.location.href
+    ).toString();
+}
 
 /**
  * Set up the event listener
@@ -51,7 +61,7 @@ function setup() {
                             });
                         }
                     });
-                    console.info(`linkThings v${version}: Initialized OK, using ${siteUrl} in VE mode`);
+                    console.info(`linkThings v${version}: Initialized OK, using ${getUrl("")} in VE mode`);
                 } else {
                     console.debug(`linkThings v${version}: VE is not in source mode`);
                 }
@@ -76,7 +86,7 @@ function setup() {
                         }
                     }
                 });
-                console.info(`linkThings v${version}: Initialized OK, using ${siteUrl} in CodeMirror mode`);
+                console.info(`linkThings v${version}: Initialized OK, using ${getUrl("")} in CodeMirror mode`);
             } else {
                 console.error(`linkThings v${version}: Could not initialize script - CodeMirror element not found?`);
                 return false;
@@ -106,7 +116,7 @@ function parseLink(element) {
             element.classList.contains("cm-mw-template-name") ?  //
                 mw.config.get("wgNamespaceIds")["template"] : undefined
         );
-        const url = `${siteUrl}${page.getPrefixedDb()}`;
+        const url = getUrl(page.getPrefixedDb());
         console.debug(`linkThings v${version}: opening ${url}`);
         openInTab(url);
         return true;
