@@ -6,7 +6,7 @@
 * @version 1.0
 * @license https://opensource.org/licenses/MIT MIT
 * @author Sam (User:TheresNoTime)
-* @link https://github.com/samtarling/linkThings
+* @link https://github.com/TheresNoGit/linkThings
 */
 /* global $, mw */
 /*jshint esversion: 6 */
