@@ -1,9 +1,9 @@
 /**
 * linkThings - a script to let you control + click on
 * [[wiki links]] and {{template links}} in the CodeMirror
-* editor
+* and visual source editor
 *
-* @version 1.2.0
+* @version 1.2.1
 * @license https://opensource.org/licenses/MIT MIT
 * @author Sam (User:TheresNoTime)
 * @link https://github.com/TheresNoGit/linkThings
@@ -12,7 +12,7 @@
 /*jshint esversion: 6 */
 
 // Configure
-let version = "1.2.0";
+let version = "1.2.1";
 let siteUrl = "https://en.wikipedia.org/wiki/";
 
 // Init

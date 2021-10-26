@@ -1,7 +1,7 @@
 {
     "name": "linkthings",
-    "version": "1.2.0",
-    "description": "a script to let you control + click on[[wiki links]] and {{template links}} in the CodeMirror editor",
+    "version": "1.2.1",
+    "description": "a script to let you control + click on[[wiki links]] and {{template links}} in the CodeMirror and visual source editor",
     "main": "linkThings.js",
     "devDependencies": {
       "eslint": "^7.32.0",
