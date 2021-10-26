@@ -6,14 +6,17 @@
 * @version 1.0
 * @license https://opensource.org/licenses/MIT MIT
 * @author Sam (User:TheresNoTime)
+* @link https://github.com/samtarling/linkThings
 */
+/* global $, mw */
+/*jshint esversion: 6 */
 
 // Configure
 let version = "1.0";
 let siteUrl = "https://en.wikipedia.org/wiki/";
 
 // Init
-$(document).ready(setup());
+$(setup());
 
 /**
  * Set up the event listener
@@ -54,7 +57,7 @@ function setup() {
  * @returns bool
  */
 function parseLink(outerHTML) {
-    const linkRegex = new RegExp('<span class=".*?cm-mw-pagename">(?<title>.*?)<\/span>', 'i');
+    const linkRegex = new RegExp('<span class=".*?cm-mw-pagename">(?<title>.*?)<\/span>', 'i'); // eslint-disable-line
 
     // Use .includes first, as its quicker than regex
     if (outerHTML.includes("cm-mw-template-name cm-mw-pagename")) {
