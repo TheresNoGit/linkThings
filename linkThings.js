@@ -1,3 +1,18 @@
+/**
+* linkThings - a script to let you control + click on
+* [[wiki links]] and {{template links}} in the CodeMirror
+* editor
+*
+* @version 1.0
+* @license https://opensource.org/licenses/MIT MIT
+* @author Sam (User:TheresNoTime)
+*/
+
+// Configure
+let version = "1.0";
+let siteUrl = "https://en.wikipedia.org/wiki/";
+
+// Init
 $(document).ready(setup());
 
 /**
@@ -6,71 +21,86 @@ $(document).ready(setup());
  * @returns bool
  */
 function setup() {
+    // Only care if we're editing
     if (/action=edit/.test(window.location.href)) {
-        mw.hook('ext.CodeMirror.switch').add(function() {
+        // Wait for CodeMirror to load
+        mw.hook('ext.CodeMirror.switch').add(function () {
             if ($(".CodeMirror").length) {
-                $('.CodeMirror').on( 'click', function( event ) {
+                // Set up event listener for a ctrl + click
+                $('.CodeMirror').on('click', function (event) {
                     if (event.ctrlKey) {
-                        if (!parseLink(event.target.outerHTML)) {
-                            console.error('linkThings v1.0: Clicked element was not a page or template');
+                        if (parseLink(event.target.outerHTML)) {
+                            return true;
+                        } else {
+                            // Assume the user ctrl + clicked on something they thought would work, and give error
+                            console.error(`linkThings v${version}: Clicked element was not detected as a page or template link`);
+                            return false;
                         }
                     }
                 });
+                console.info(`linkThings v${version}: Initialized OK, using ${siteUrl}`);
             } else {
-                console.error('linkThings v1.0: Could not initialize');
+                console.error(`linkThings v${version}: Could not initialize script - CodeMirror element not found?`);
+                return false;
             }
-		});
+        });
     }
 }
 
 /**
  * Parse a ctrl clicked *anything*
  * 
+ * @param {string} outerHTML Clicked HTML element
  * @returns bool
  */
 function parseLink(outerHTML) {
-    let linkRegex = new RegExp('<span class=".*?cm-mw-pagename">(?<title>.*?)<\/span>', 'i');
+    const linkRegex = new RegExp('<span class=".*?cm-mw-pagename">(?<title>.*?)<\/span>', 'i');
 
+    // Use .includes first, as its quicker than regex
     if (outerHTML.includes("cm-mw-template-name cm-mw-pagename")) {
-        // Template, so check if its a non-templatespace template
-        console.debug('Template link');
+        // This is a template link of some sort
         if (outerHTML.includes(":")) {
-            // Non-templatespace
-            console.debug('Non-templatespace template link');
+            // Template is not in the template namespace
             let match = linkRegex.exec(outerHTML);
-            let url = 'https://en.wikipedia.org/wiki/' + match.groups.title;
-            console.debug(url);
+            let url = `${siteUrl}${match.groups.title}`;
+            console.debug(`linkThings v${version}: [!T] opening ${url}`);
             openInTab(url);
             return true;
         } else {
-            // Not
-            console.debug('Template space template link');
+            // Template is in the template namespace
             let match = linkRegex.exec(outerHTML);
-            let url = 'https://en.wikipedia.org/wiki/Template:' + match.groups.title;
-            console.debug(url);
+            let url = `${siteUrl}Template:${match.groups.title}`;
+            console.debug(`linkThings v${version}: [T] opening ${url}`);
             openInTab(url);
             return true;
         }
     } else if (outerHTML.includes("cm-mw-link-pagename cm-mw-pagename")) {
-        // Page
-        console.debug('Page link');
+        // This is a page link
         let match = linkRegex.exec(outerHTML);
-        let url = 'https://en.wikipedia.org/wiki/' + match.groups.title;
-        console.debug(url);
+        let url = `${siteUrl}${match.groups.title}`;
+        console.debug(`linkThings v${version}: [P] opening ${url}`);
         openInTab(url);
         return true;
     } else {
-        // Neither
+        // Neither a template link nor a page link
         return false;
     }
 }
 
+/**
+ * Opens a URL in a new tab
+ * 
+ * @param {string} url URL to open
+ * @returns bool
+ */
 function openInTab(url) {
     var newTab = window.open(url, '_blank');
     if (newTab) {
         newTab.focus();
+        return true;
     } else {
-        console.error('linkThings v1.0: Browser did not open new tab');
-        alert('Please allow popups for this website');
+        console.error(`linkThings v${version}: Browser did not open new tab. Check settings?`);
+        alert('Please ensure popups are enabled for this site');
+        return false;
     }
 }
