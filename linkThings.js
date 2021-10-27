@@ -3,16 +3,16 @@
 * [[wiki links]] and {{template links}} in the CodeMirror
 * and visual source editor
 *
-* @version 1.2.1
+* @version 1.3.0
 * @license https://opensource.org/licenses/MIT MIT
-* @author Sam (User:TheresNoTime)
+* @author https://github.com/TheresNoGit/linkThings/graphs/contributors
 * @link https://github.com/TheresNoGit/linkThings
 */
 /* global $, mw, ve */
 /*jshint esversion: 6 */
 
 // Configure
-let version = "1.2.1";
+let version = "1.3.0";
 
 // Init
 mw.loader.using(["mediawiki.Title"], setup);
