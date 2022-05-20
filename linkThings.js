@@ -12,7 +12,7 @@
 /*jshint esversion: 6 */
 
 // Configure
-let version = "1.3.0";
+let version = "1.3.1";
 
 // Init
 mw.loader.using(["mediawiki.Title"], setup);
