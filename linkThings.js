@@ -3,7 +3,7 @@
 * [[wiki links]] and {{template links}} in the CodeMirror
 * and visual source editor
 *
-* @version 1.3.0
+* @version 1.3.1
 * @license https://opensource.org/licenses/MIT MIT
 * @author https://github.com/TheresNoGit/linkThings/graphs/contributors
 * @link https://github.com/TheresNoGit/linkThings
@@ -34,65 +34,62 @@ function getUrl(page = "") {
  * @returns bool
  */
 function setup() {
-    // Only care if we're editing
-    if (/[?&]action=(edit|submit)/.test(window.location.search)) {
-        // Wait for VE Source to load
-        mw.hook('ve.activationComplete').add(function () {
-            if ($(".ve-ui-surface").length) {
-                // Get VE object
-                var surface = ve.init.target.getSurface();
-                // Only run in source mode
-                if (surface.getMode() === 'source') {
-                    // Set up event listener for a ctrl + click
-                    $('.ve-ui-surface').on('click', function (event) {
-                        if (event.ctrlKey) {
-                            $(".cm-mw-pagename").each((i, e) => {
-                                // Click "raycasting" in order to detect the click even if the VE
-                                // elemnent is overhead.
-                                if (isClickAboveElement(e, event)) {
-                                    if (parseLink(e)) {
-                                        return true;
-                                    } else {
-                                        // Assume the user ctrl + clicked on something they thought would work, and give error
-                                        console.error(`linkThings v${version}: Clicked element was not detected as a page or template link`);
-                                        return false;
-                                    }
-                                }
-                            });
-                        }
-                    });
-                    console.info(`linkThings v${version}: Initialized OK, using ${getUrl()} in VE mode`);
-                } else {
-                    console.debug(`linkThings v${version}: VE is not in source mode`);
-                }
-            } else {
-                console.error(`linkThings v${version}: Could not initialize script - ve-ui-surface element not found?`);
-                return false;
-            }
-        });
-
-        // Wait for CodeMirror to load
-        mw.hook('ext.CodeMirror.switch').add(function () {
-            if ($(".CodeMirror").length) {
+    // Wait for VE Source to load
+    mw.hook('ve.activationComplete').add(function () {
+        if ($(".ve-ui-surface").length) {
+            // Get VE object
+            var surface = ve.init.target.getSurface();
+            // Only run in source mode
+            if (surface.getMode() === 'source') {
                 // Set up event listener for a ctrl + click
-                $('.cm-mw-pagename').on('click', function (event) {
+                $('.ve-ui-surface').on('click', function (event) {
                     if (event.ctrlKey) {
-                        if (parseLink(event.target)) {
-                            return true;
-                        } else {
-                            // Assume the user ctrl + clicked on something they thought would work, and give error
-                            console.error(`linkThings v${version}: Clicked element was not detected as a page or template link`);
-                            return false;
-                        }
+                        $(".cm-mw-pagename").each((i, e) => {
+                            // Click "raycasting" in order to detect the click even if the VE
+                            // elemnent is overhead.
+                            if (isClickAboveElement(e, event)) {
+                                if (parseLink(e)) {
+                                    return true;
+                                } else {
+                                    // Assume the user ctrl + clicked on something they thought would work, and give error
+                                    console.error(`linkThings v${version}: Clicked element was not detected as a page or template link`);
+                                    return false;
+                                }
+                            }
+                        });
                     }
                 });
-                console.info(`linkThings v${version}: Initialized OK, using ${getUrl()} in CodeMirror mode`);
+                console.info(`linkThings v${version}: Initialized OK, using ${getUrl()} in VE mode`);
             } else {
-                console.error(`linkThings v${version}: Could not initialize script - CodeMirror element not found?`);
-                return false;
+                console.debug(`linkThings v${version}: VE is not in source mode`);
             }
-        });
-    }
+        } else {
+            console.error(`linkThings v${version}: Could not initialize script - ve-ui-surface element not found?`);
+            return false;
+        }
+    });
+
+    // Wait for CodeMirror to load
+    mw.hook('ext.CodeMirror.switch').add(function () {
+        if ($(".CodeMirror").length) {
+            // Set up event listener for a ctrl + click
+            $('.cm-mw-pagename').on('click', function (event) {
+                if (event.ctrlKey) {
+                    if (parseLink(event.target)) {
+                        return true;
+                    } else {
+                        // Assume the user ctrl + clicked on something they thought would work, and give error
+                        console.error(`linkThings v${version}: Clicked element was not detected as a page or template link`);
+                        return false;
+                    }
+                }
+            });
+            console.info(`linkThings v${version}: Initialized OK, using ${getUrl()} in CodeMirror mode`);
+        } else {
+            console.error(`linkThings v${version}: Could not initialize script - CodeMirror element not found?`);
+            return false;
+        }
+    });
 }
 
 /**
